@@ -1,0 +1,32 @@
+{
+  "name": "@evalkit/core",
+  "version": "0.0.0",
+  "private": false,
+  "main": "dist/index.esm.js",
+  "module": "dist/index.esm.js",
+  "types": "dist/index.d.ts",
+  "type": "module",
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix && prettier --write .",
+    "build": "rollup -c",
+    "dev": "rollup -c -w",
+    "publish": "turbo run build lint && changeset version && changeset publish"
+  },
+  "devDependencies": {
+    "@evalkit/eslint-config": "*",
+    "@evalkit/typescript-config": "*",
+    "@turbo/gen": "^1.12.4",
+    "@types/eslint": "^8.56.5",
+    "@types/node": "^20.11.24",
+    "eslint": "^8.57.0",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "openai": "^4.47.1"
+  }
+}

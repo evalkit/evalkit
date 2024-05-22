@@ -1,0 +1,50 @@
+---
+title: Semantic Similarity
+---
+
+## Overview
+
+The Semantic Similarity metric evaluates the degree of semantic correspondence between two texts. This measurement uses embeddings and cosine similarity calculations to quantitatively assess how closely the ideas in one text relate to those in another text, even if their wording differs.
+
+`SemanticSimilarityMetric` leverages the `evaluateSemanticSimilarity` function to perform this analysis.
+
+## Methods
+
+### `evaluateSemanticSimilarity` Function
+
+This function measures the semantic similarity between two pieces of text using advanced embedding techniques.
+
+- `text1`: The first text in the comparison.
+- `text2`: The second text in the comparison.
+
+The function computes embeddings for each text and calculates the cosine similarity between these embeddings. It returns a promise that resolves to a number representing the cosine similarity, where higher values indicate greater semantic similarity.
+
+### `SemanticSimilarityMetric` Class
+
+`SemanticSimilarityMetric` assesses the semantic similarity between two texts to determine how closely the contents are related in meaning.
+
+- `text1`: The first text to be compared.
+- `text2`: The second text to be compared.
+
+The `evaluateSteps` method invokes `evaluateSemanticSimilarity` and provides a detailed result including a similarity score. A threshold is set to determine high similarity, with detailed reasons provided based on the similarity score.
+
+## Example
+
+```typescript
+import { evaluate, SemanticSimilarityMetric } from '@evalkit/core';
+
+evaluate({
+    // First text for comparison
+    text1: "Electric cars reduce greenhouse gas emissions.",
+    // Second text for comparison
+    text2: "Electric vehicles help lower emissions that contribute to climate change.",
+}, [SemanticSimilarityMetric])
+
+// outputs
+{
+  passed: true,
+  // The direct result of the semantic similarity calculation
+  score: 0.96,
+  reasons: ['Semantic similarity score: 0.9586464920079194']
+}
+```

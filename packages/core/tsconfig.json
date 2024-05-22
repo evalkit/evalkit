@@ -1,0 +1,10 @@
+{
+  "extends": "@evalkit/typescript-config/lib.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "baseUrl": "."
+  },
+  "include": ["./src/**/*"],
+  "exclude": ["node_modules"]
+}

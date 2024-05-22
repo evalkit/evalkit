@@ -27,6 +27,10 @@ out/
 build
 dist
 
+# editors
+.vscode
+.idea
+
 
 # Debug
 npm-debug.log*

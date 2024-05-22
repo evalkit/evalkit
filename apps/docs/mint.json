@@ -1,0 +1,58 @@
+{
+  "$schema": "https://mintlify.com/schema.json",
+  "name": "EvalKit",
+  "favicon": "/favicon.svg",
+  "colors": {
+    "primary": "#005566",
+    "light": "#007788",
+    "dark": "#005566",
+    "anchors": {
+      "from": "#FF9900",
+      "to": "#CC6600"
+    }
+  },
+  "topbarLinks": [
+    {
+      "name": "Support",
+      "url": "mailto:ran@codeably.io"
+    }
+  ],
+  "topbarCtaButton": {
+    "name": "GitHub",
+    "url": "https://github.com/evalkit/evalkit"
+  },
+  "tabs": [],
+  "navigation": [
+    {
+      "group": "Getting Started",
+      "pages": [
+        "introduction",
+        "quickstart"
+      ]
+    },
+    {
+      "group": "Evaluations",
+      "pages": [
+        "evaluations/overview",
+        {
+          "group": "Metrics",
+          "pages": [
+            "evaluations/metrics/bias-detection",
+            "evaluations/metrics/coherence",
+            "evaluations/metrics/dynamic",
+            "evaluations/metrics/faithfulness",
+            "evaluations/metrics/hallucination",
+            "evaluations/metrics/intent-detection",
+            "evaluations/metrics/relevancy",
+            "evaluations/metrics/semantic-similarity"
+          ]
+        }
+      ]
+    }
+  ],
+  "footerSocials": {
+    "x": "https://x.com/mintlify",
+    "github": "https://github.com/mintlify",
+    "linkedin": "https://www.linkedin.com/company/mintsearch"
+  }
+}

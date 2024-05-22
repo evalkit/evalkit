@@ -1,0 +1,38 @@
+---
+title: Quickstart
+description: Get started with the EvalKit evaluations framework.
+---
+
+## Installation
+
+EvalKit exports multiple NPM packages.<br />
+We'll concentrate on the evaluations framework package, which is available at:
+
+```bash
+npm install --save-dev @evalkit/core
+```
+
+## Usage of OpenAI
+
+Currently, EvalKit is using OpenAI API in order to perform evaluations.<br />
+Therefore, you'll need to set up an OpenAI account and get an API key.<br />
+
+Once you have the API key, you can set it up in your environment variables (`.env` file)
+
+```
+OPENAI_API_KEY=your-api-key
+```
+
+## Writing your first evaluation
+
+The EvalKit evaluations framework provides a simple API to evaluate text using pre-trained transformer models. Here's a quick example to get you started:
+
+```typescript
+import { evaluate, BiasDetectionMetric } from '@evalkit/core';
+
+evaluate({
+    // The response (output) by the LLM
+	output: "The company prefers to hire young and energetic candidates.",
+    // The metrics to use
+}, [BiasDetectionMetric, CoherenceMetric])
+```

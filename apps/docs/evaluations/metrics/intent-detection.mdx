@@ -1,0 +1,52 @@
+---
+title: Intent Classification
+---
+
+## Overview
+
+The Intent Classification metric evaluates the intent behind a given text to determine how well it aligns with one or more predefined expected intents.<br />
+`IntentClassificationMetric` leverages the `classifyIntent` function to perform this evaluation.
+
+## Methods
+
+### `classifyIntent` Function
+
+This function classifies the intent behind a given text and compares it against expected intents.
+
+- `input`: The text to be classified.
+- `expectedIntents`: A list of expected intents to evaluate against.
+
+It uses a transformer model to determine the intent and assesses the match against the expected intents based on confidence and similarity scores. The function returns a promise that resolves to an object containing the detected intent, its confidence score, and a similarity score with the expected intents.
+
+### `IntentClassificationMetric` Class
+
+`IntentClassificationMetric` classifies and evaluates the intent behind text based on predefined expectations.
+
+- `input`: The text to be classified.
+- `expectedIntents`: The expected intents against which the text will be evaluated.
+
+The `evaluateSteps` method invokes `classifyIntent` and returns a detailed result, including a score and reasons. The score reflects how closely the detected intent matches the expected intents, with detailed reasons explaining the similarities and differences.
+
+## Example
+
+```typescript
+import { evaluate, IntentClassificationMetric } from '@evalkit/core';
+
+evaluate({
+    // The text input for intent classification
+    input: "Can you help me find a nearby pharmacy?",
+    // The expected intent(s) for the classification
+    expectedIntents: ["LocateService", "HealthInquiry"],
+}, [IntentClassificationMetric])
+
+// outputs
+{
+  passed: true,
+  // The coherence score is 0.9, which is calculated based on the percentage of coherent statements from all statements in the text.
+  score: 0.5,
+  Reasons: [
+    'Detected intents: LocateService, HealthInquiry',
+    'Matching intents: 1 out of 2'
+  ]
+}
+```
