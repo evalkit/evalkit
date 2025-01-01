@@ -36,7 +36,7 @@ export default function Home() {
         />
       </div>
       
-      <section className="container relative min-h-screen flex items-center justify-center py-8 md:py-12 lg:py-24">
+      <section className="container relative min-h-screen flex items-center justify-center py-8 md:py-12 lg:py-24 mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -96,7 +96,7 @@ export default function Home() {
         </motion.div>
       </section>
       
-      <section className="container py-8 md:py-12 lg:py-24">
+      <section className="container py-8 md:py-12 lg:py-24 mx-auto">
         <div className="mx-auto grid justify-center gap-8 sm:grid-cols-2 md:max-w-[64rem] md:grid-cols-3">
           {features.map((feature, i) => (
             <motion.div
@@ -121,7 +121,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="container py-8 md:py-12 lg:py-24">
+      <section className="container py-8 md:py-12 lg:py-24 mx-auto">
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
@@ -167,7 +167,7 @@ export default function Home() {
         </motion.div>
       </section>
 
-      <section className="container py-8 md:py-12 lg:py-24">
+      <section className="container py-8 md:py-12 lg:py-24 mx-auto">
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}

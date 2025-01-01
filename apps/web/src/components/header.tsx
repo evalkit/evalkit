@@ -9,7 +9,7 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <nav className="container flex h-14 max-w-screen-2xl items-center justify-between">
+      <nav className="flex h-14 items-center justify-between w-full">
         <Link href="/" className="flex items-center ml-4">
           <span className="text-xl font-bold gradient-text">EvalKit</span>
         </Link>
