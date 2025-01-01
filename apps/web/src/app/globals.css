@@ -1,0 +1,92 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 212 80% 15%;
+    --primary: 212 100% 40%;
+    --primary-foreground: 210 10% 98%;
+    --muted: 212 20% 95%;
+    --muted-foreground: 212 35% 40%;
+    --accent: 192 100% 42%;
+    --accent-foreground: 210 10% 98%;
+    --border: 212 25% 90%;
+    --code: 212 20% 98%;
+  }
+
+  .dark {
+    --background: 212 50% 5%;
+    --foreground: 210 10% 98%;
+    --primary: 212 100% 50%;
+    --primary-foreground: 210 10% 98%;
+    --muted: 212 30% 15%;
+    --muted-foreground: 212 20% 65%;
+    --accent: 192 100% 50%;
+    --accent-foreground: 210 10% 98%;
+    --border: 212 35% 15%;
+    --code: 212 40% 8%;
+  }
+}
+
+@layer base {
+  body {
+    @apply bg-background text-foreground antialiased;
+    background-image: 
+      radial-gradient(circle at 100% 0%, hsla(var(--primary) / 0.05) 0%, transparent 40%),
+      radial-gradient(circle at 0% 100%, hsla(var(--accent) / 0.05) 0%, transparent 40%);
+    background-attachment: fixed;
+  }
+}
+
+.gradient-text {
+  @apply bg-clip-text text-transparent;
+  background-image: linear-gradient(
+    135deg,
+    hsl(var(--primary)) 0%,
+    hsl(var(--accent)) 50%,
+    hsl(var(--primary)) 100%
+  );
+  background-size: 200% auto;
+  animation: shine 8s linear infinite;
+}
+
+@keyframes shine {
+  to {
+    background-position: 200% center;
+  }
+}
+
+.glass-effect {
+  @apply bg-muted/30 backdrop-blur-xl border border-border/50;
+  box-shadow: 
+    0 0 0 1px hsla(var(--border) / 0.1),
+    0 4px 6px -1px hsla(var(--background) / 0.1),
+    0 2px 4px -2px hsla(var(--background) / 0.1);
+}
+
+.feature-card {
+  @apply relative overflow-hidden rounded-xl border border-border/50 bg-muted/30 backdrop-blur-lg p-2;
+  box-shadow: 
+    0 0 0 1px hsla(var(--border) / 0.1),
+    0 4px 6px -1px hsla(var(--background) / 0.1),
+    0 2px 4px -2px hsla(var(--background) / 0.1);
+  transition: all 0.3s ease;
+}
+
+.feature-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 0 0 1px hsla(var(--border) / 0.1),
+    0 8px 12px -1px hsla(var(--background) / 0.1),
+    0 4px 8px -2px hsla(var(--background) / 0.1);
+}
+
+.code-block {
+  @apply relative rounded-xl border border-border bg-[hsl(var(--code))] p-0 overflow-hidden;
+  box-shadow: 
+    0 0 0 1px hsla(var(--border) / 0.1),
+    0 4px 6px -1px hsla(var(--background) / 0.1),
+    0 2px 4px -2px hsla(var(--background) / 0.1);
+}

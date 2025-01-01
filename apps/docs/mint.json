@@ -3,12 +3,12 @@
   "name": "EvalKit",
   "favicon": "/favicon.svg",
   "colors": {
-    "primary": "#005566",
-    "light": "#007788",
-    "dark": "#005566",
+    "primary": "#0052CC",
+    "light": "#00B8D9",
+    "dark": "#0052CC",
     "anchors": {
-      "from": "#FF9900",
-      "to": "#CC6600"
+      "from": "#0052CC",
+      "to": "#00B8D9"
     }
   },
   "topbarLinks": [
