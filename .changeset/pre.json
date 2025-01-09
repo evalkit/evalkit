@@ -1,0 +1,15 @@
+{
+  "mode": "exit",
+  "tag": "alpha",
+  "initialVersions": {
+    "docs": "0.0.0",
+    "web": "0.1.0",
+    "@evalkit/core": "0.0.1-alpha.1",
+    "@evalkit/eslint-config": "0.0.0",
+    "@evalkit/typescript-config": "0.0.0"
+  },
+  "changesets": [
+    "eighty-dogs-yawn",
+    "thin-rabbits-clean"
+  ]
+}

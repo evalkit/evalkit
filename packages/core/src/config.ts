@@ -27,10 +27,6 @@ class ConfigManager {
     return ConfigManager.instance;
   }
 
-  setOpenAIConfig(config: OpenAIConfig) {
-    this.openAIConfig = config;
-  }
-
   createOpenAIClient(): OpenAI {
     // For standard OpenAI with just an API key, create a default client
     if (!this.openAIConfig) {
