@@ -5,23 +5,50 @@ description: Get started with the EvalKit evaluations framework.
 
 ## Installation
 
-EvalKit exports multiple NPM packages.<br />
+EvalKit exports multiple NPM packages.  
 We'll concentrate on the evaluations framework package, which is available at:
 
 ```bash
 npm install --save-dev @evalkit/core
 ```
 
-## Usage of OpenAI
+## OpenAI Configuration
 
 Currently, EvalKit is using OpenAI API in order to perform evaluations.<br />
-Therefore, you'll need to set up an OpenAI account and get an API key.<br />
+Therefore, you'll need to set up an OpenAI account and get an API key. Or configure it otherwise<br />
 
-Once you have the API key, you can set it up in your environment variables (`.env` file)
-
-```
+### Standard OpenAI
+Simply set your OpenAI API key in your environment:
+```env
 OPENAI_API_KEY=your-api-key
 ```
+
+Or if you prefer to set it programmatically:
+```typescript
+import { config } from '@evalkit/core';
+
+config.setOpenAIConfig({
+  apiKey: process.env.OPENAI_KEY
+});
+```
+
+### Custom OpenAI/Azure OpenAI
+For custom OpenAI endpoints (like Azure OpenAI), use the config:
+```typescript
+import { config } from '@evalkit/core';
+
+config.setOpenAIConfig({
+  apiKey: process.env.MY_AZURE_KEY,
+  baseURL: process.env.MY_AZURE_ENDPOINT,
+  apiVersion: '2023-05-15',  // Optional, defaults to 2023-05-15
+  deploymentName: process.env.MY_DEPLOYMENT
+});
+```
+
+The configuration is environment-agnostic - use any environment variables or configuration source you prefer. Required fields for custom endpoints:
+- `apiKey`
+- `baseURL`
+- `deploymentName` (for Azure OpenAI)
 
 ## Writing your first evaluation
 
@@ -30,9 +57,16 @@ The EvalKit evaluations framework provides a simple API to evaluate text using p
 ```typescript
 import { evaluate, BiasDetectionMetric } from '@evalkit/core';
 
-evaluate({
-    // The response (output) by the LLM
-	output: "The company prefers to hire young and energetic candidates.",
-    // The metrics to use
-}, [BiasDetectionMetric, CoherenceMetric])
+// Simple evaluation
+const result = await evaluate({
+  output: "The company prefers to hire young and energetic candidates.",
+}, [BiasDetectionMetric]);
+
+// Advanced evaluation with multiple metrics
+const result = await evaluate({
+  input: "What are the benefits of renewable energy?",
+  output: "Renewable energy sources reduce emissions and help fight climate change.",
+  expectedOutput: "Renewable energy sources like solar and wind power reduce greenhouse gas emissions and help combat climate change.",
+  criteria: [{ type: "Accuracy" }, { type: "Relevance" }]
+}, [RelevancyMetric, DynamicMetric]);
 ```
