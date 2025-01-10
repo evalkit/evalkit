@@ -7,8 +7,6 @@ export interface IntentClassificationMetricParams {
 }
 
 export class IntentClassificationMetric extends BaseMetric<IntentClassificationMetricParams> {
-  override evaluationParams: IntentClassificationMetricParams;
-
   constructor(evaluationParams: IntentClassificationMetricParams) {
     super(
       "Intent Classification Evaluation",

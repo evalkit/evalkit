@@ -1,8 +1,8 @@
 {
-  "extends": "@evalkit/typescript-config/base.json",
-  "compilerOptions": {
-    "outDir": "dist"
-  },
-  "include": ["src", "turbo", "jest.config.ts", ".eslintrc.cjs"],
-  "exclude": ["node_modules", "dist"]
+  "extends": "./tsconfig.json",
+  "include": [
+    "src/**/*.ts",
+    "scripts/**/*.ts",
+    ".eslintrc.cjs"
+  ]
 }

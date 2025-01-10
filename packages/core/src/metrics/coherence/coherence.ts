@@ -1,3 +1,9 @@
+import { OpenAI } from "openai";
+
+export interface CoherenceContext {
+  openai: OpenAI;
+}
+
 enum Label {
   Coherent = "Coherent",
   Incoherent = "Incoherent",
@@ -11,6 +17,7 @@ enum Label {
  * @returns A promise that resolves to a number indicating the coherence score.
  */
 export async function evaluateCoherence(
+  this: CoherenceContext,
   output: string,
 ): Promise<{ score: number; reason: string }> {
   let coherentStatements = 0;
@@ -31,7 +38,7 @@ export async function evaluateCoherence(
           content: `
 		        Evaluate the coherence between two consecutive statements. Consider if the transition is logically supported by evidence or if it makes an unsupported leap. Assess if the second statement follows naturally from the first, or if it introduces generalizations that lack grounding in the first statement.
 		        Return JSON response with schema: { label: 'Coherent', 'Incoherent'; score: float between 1-0 relative to label (so incoherent can also get 0.9); reason: string (1 liner) }
-          `,
+            `,
         },
         {
           role: "user",
@@ -39,20 +46,40 @@ export async function evaluateCoherence(
         },
       ],
       max_tokens: 80,
-      model: "gpt-3.5-turbo",
+      model: "gpt-4o-mini",
     });
 
-    const result = JSON.parse(response.choices[0].message.content);
-
-    if (result.label === Label.Incoherent && result.score >= 0.8) {
+    if (!response.choices[0]?.message?.content) {
       return {
         score: 0,
-        reason: result.reason,
+        reason: "Failed to get valid response from OpenAI",
       };
     }
 
-    if (result.label === Label.Coherent && result.score >= 0.8) {
-      coherentStatements++;
+    try {
+      const result = JSON.parse(response.choices[0].message.content);
+      if (!result || typeof result.label !== 'string' || typeof result.score !== 'number' || typeof result.reason !== 'string') {
+        return {
+          score: 0,
+          reason: "Invalid response format from OpenAI",
+        };
+      }
+
+      if (result.label === Label.Incoherent && result.score >= 0.8) {
+        return {
+          score: 0,
+          reason: result.reason,
+        };
+      }
+
+      if (result.label === Label.Coherent && result.score >= 0.8) {
+        coherentStatements++;
+      }
+    } catch (error) {
+      return {
+        score: 0,
+        reason: "Failed to parse OpenAI response",
+      };
     }
   }
 

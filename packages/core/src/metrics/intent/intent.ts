@@ -1,3 +1,9 @@
+import { OpenAI } from "openai";
+
+export interface IntentContext {
+  openai: OpenAI;
+}
+
 /**
  * Classifies the intent behind a given text.
  *
@@ -6,6 +12,7 @@
  * @returns A promise that resolves to an object containing the detected intent and its confidence score.
  */
 export async function classifyIntent(
+  this: IntentContext,
   input: string,
   expectedIntents: string[],
 ): Promise<{ score: number; reasons: string[] }> {
@@ -29,29 +36,53 @@ export async function classifyIntent(
       { role: "user", content: input },
     ],
     max_tokens: 250,
-    model: "gpt-3.5-turbo",
+    model: "gpt-4o-mini",
   });
 
-  const intentsList = JSON.parse(response.choices[0].message.content);
-  let matchingIntents = 0;
-  for (const intentItem of intentsList) {
-    const { confidence, similarity } = intentItem;
-    if (
-      confidence > 0.8 &&
-      expectedIntents.includes(similarity.inputIntent) &&
-      similarity.score >= 0.8
-    ) {
-      matchingIntents++;
-    }
+  if (!response.choices[0]?.message?.content) {
+    return {
+      score: 0,
+      reasons: ["Failed to get valid response from OpenAI"],
+    };
   }
 
-  const reasons = [
-    `Detected intents: ${intentsList.map((intentItem: any) => intentItem.intent).join(", ")}`,
-    `Matching intents: ${matchingIntents} out of ${expectedIntents.length}`,
-  ];
+  try {
+    const intentsList = JSON.parse(response.choices[0].message.content);
+    if (!Array.isArray(intentsList)) {
+      return {
+        score: 0,
+        reasons: ["Invalid response format from OpenAI"],
+      };
+    }
 
-  return {
-    score: matchingIntents / expectedIntents.length,
-    reasons,
-  };
+    let matchingIntents = 0;
+    for (const intentItem of intentsList) {
+      if (!intentItem?.confidence || !intentItem?.similarity?.inputIntent || !intentItem?.similarity?.score) {
+        continue;
+      }
+      const { confidence, similarity } = intentItem;
+      if (
+        confidence > 0.8 &&
+        expectedIntents.includes(similarity.inputIntent) &&
+        similarity.score >= 0.8
+      ) {
+        matchingIntents++;
+      }
+    }
+
+    const reasons = [
+      `Detected intents: ${intentsList.map((intentItem: any) => intentItem.intent).join(", ")}`,
+      `Matching intents: ${matchingIntents} out of ${expectedIntents.length}`,
+    ];
+
+    return {
+      score: matchingIntents / expectedIntents.length,
+      reasons,
+    };
+  } catch (error) {
+    return {
+      score: 0,
+      reasons: ["Failed to parse OpenAI response"],
+    };
+  }
 }

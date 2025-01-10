@@ -1,6 +1,6 @@
 export function calculateCosineSimilarity(vecA: number[], vecB: number[]) {
   const dotProduct = vecA.reduce(
-    (acc, current, idx) => acc + current * vecB[idx],
+    (acc, current, idx) => acc + current * vecB[idx]!,
     0,
   );
   const magnitudeA = Math.sqrt(vecA.reduce((acc, val) => acc + val * val, 0));

@@ -6,11 +6,11 @@ import { OpenAI } from 'openai';
 describe('evaluateCoherence', () => {
 	let invoker: any;
 	beforeAll(() => {
-		invoker = (...args: any[]) => {
+		invoker = (output: string) => {
 			const openAI = new OpenAI({
 				apiKey: process.env['OPENAI_API_KEY'] ?? "",
 			});
-			return evaluateCoherence.call({ openai: openAI }, ...args);
+			return evaluateCoherence.call({ openai: openAI }, output);
 		}
 	})
 	describe('coherent statement', () => {
@@ -28,4 +28,24 @@ describe('evaluateCoherence', () => {
 			expect(score).toBeLessThan(0.5);
 		})
 	})
+
+	it("should handle invalid OpenAI responses", async () => {
+		const mockOpenAI = {
+			chat: {
+				completions: {
+					create: jest.fn().mockResolvedValue({
+						choices: [{ message: { content: "invalid json" } }]
+					})
+				}
+			}
+		} as unknown as OpenAI;
+
+		const result = await evaluateCoherence.call(
+			{ openai: mockOpenAI },
+			"First statement. Second statement."
+		);
+
+		expect(result.score).toBe(0);
+		expect(result.reason).toBe("Failed to parse OpenAI response");
+	});
 })

@@ -18,7 +18,6 @@ export class BaseMetric<TParams> {
   criteria: string;
   evaluationParams: TParams;
   threshold: number;
-  strictMode: boolean;
   evaluationsReporter: ReportService;
   openai: OpenAI;
 

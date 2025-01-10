@@ -7,8 +7,6 @@ export interface RelevancyMetricParams {
 }
 
 export class RelevancyMetric extends BaseMetric<RelevancyMetricParams> {
-  override evaluationParams: RelevancyMetricParams;
-
   constructor(evaluationParams: RelevancyMetricParams) {
     super(
       "Relevancy Evaluation",

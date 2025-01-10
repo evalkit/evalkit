@@ -1,3 +1,9 @@
+import { OpenAI } from "openai";
+
+export interface HallucinationContext {
+  openai: OpenAI;
+}
+
 enum Label {
   Faithful = "Faithful",
   Hallucinated = "Hallucinated",
@@ -11,6 +17,7 @@ enum Label {
  * @returns A promise that resolves to a number indicating the percentage of hallucinated statements.
  */
 export async function evaluateHallucination(
+  this: HallucinationContext,
   output: string,
   context: string,
 ): Promise<number> {
@@ -33,14 +40,26 @@ export async function evaluateHallucination(
         { role: "user", content: statement },
       ],
       max_tokens: 80,
-      model: "gpt-3.5-turbo",
+      model: "gpt-4o-mini",
     });
 
-    const result = JSON.parse(response.choices[0].message.content);
-    if (result.label === Label.Hallucinated && result.score >= 0.8) {
-      hallucinatedStatements++;
+    if (!response.choices[0]?.message?.content) {
+      return 0;
+    }
+
+    try {
+      const result = JSON.parse(response.choices[0].message.content);
+      if (!result || typeof result.label !== 'string' || typeof result.score !== 'number') {
+        return 0;
+      }
+
+      if (result.label === Label.Hallucinated && result.score <= 0.8) {
+        hallucinatedStatements++;
+      }
+    } catch (error) {
+      return 0;
     }
   }
 
-  return hallucinatedStatements / statements.length;
+  return statements.length > 0 ? hallucinatedStatements / statements.length : 0;
 }

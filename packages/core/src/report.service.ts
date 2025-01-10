@@ -1,4 +1,8 @@
 import { EvaluationExecutionResult } from "./metrics/base.metric";
+import { BaseReporter } from "./reporters/base.reporter";
+import { JSONReporter } from "./reporters/json.reporter";
+import { HTMLReporter } from "./reporters/html.reporter";
+import { ConsoleReporter } from "./reporters/console.reporter";
 
 export interface EvaluationExecutionReportItem {
   metricName: string;
@@ -13,28 +17,47 @@ export interface EvaluationExecutionReport {
   duration: number;
 }
 
+export interface ReportServiceConfig {
+  reporters?: BaseReporter[];
+  outputDir?: string;
+}
+
 export class ReportService {
-  private static instance: ReportService;
-  public results: EvaluationExecutionReportItem[] = [];
-  public startTime: number;
-  public endTime: number;
+  private static instance: ReportService | undefined;
+  private results: EvaluationExecutionReportItem[] = [];
+  private startTime = 0;
+  private endTime = 0;
+  private reporters: BaseReporter[];
 
-  private constructor() {}
+  private constructor(config: ReportServiceConfig = {}) {
+    const { reporters = [], outputDir = "./eval-reports" } = config;
+    
+    // Default reporters if none provided
+    this.reporters = reporters.length > 0 ? reporters : [
+      new JSONReporter({ outputDir }),
+      new HTMLReporter({ outputDir }),
+      new ConsoleReporter()
+    ];
+  }
 
-  public static getInstance(): ReportService {
+  public static getInstance(config?: ReportServiceConfig): ReportService {
     if (!ReportService.instance) {
-      ReportService.instance = new ReportService();
+      ReportService.instance = new ReportService(config);
     }
-
     return ReportService.instance;
+  }
+
+  public static resetInstance(): void {
+    ReportService.instance = undefined;
   }
 
   reportEvaluationStart(): void {
     this.startTime = Date.now();
   }
 
-  reportEvaluationEnd(): void {
+  async reportEvaluationEnd(): Promise<void> {
     this.endTime = Date.now();
+    await this.writeReports();
   }
 
   reportEvaluation(result: EvaluationExecutionReportItem): void {
@@ -47,12 +70,19 @@ export class ReportService {
     return params;
   }
 
-  getFinalResult(): EvaluationExecutionReport {
+  getFinalReport(): EvaluationExecutionReport {
     return {
       startTime: this.startTime,
       endTime: this.endTime,
       items: this.results,
       duration: this.endTime - this.startTime,
     };
+  }
+
+  private async writeReports(): Promise<void> {
+    const report = this.getFinalReport();
+    await Promise.all(
+      this.reporters.map(reporter => reporter.write(report))
+    );
   }
 }

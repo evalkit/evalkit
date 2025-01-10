@@ -20,8 +20,8 @@ async function evaluate<TMetrics extends MetricType[]>(
     }
   }
 
-  reportService.reportEvaluationEnd();
-  return reportService.getFinalResult();
+  await reportService.reportEvaluationEnd();
+  return reportService.getFinalReport();
 }
 
 export { evaluate };
