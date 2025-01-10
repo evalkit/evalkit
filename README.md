@@ -95,8 +95,10 @@ In the documentation, you can find information on how to use EvalKit, its archit
     </tr>
     <tr>
       <td>Reporting</td>
-      <td align="center">🚧</td>
-      <td align="center">🚧</td>
+      <td align="center">✅</td>
+      <td align="center">
+        <a href="https://docs.evalkit.ai/evaluations/reporting">🔗</a>
+      </td>
     </tr>
   </tbody>
 </table>

@@ -3,6 +3,7 @@ import { BaseReporter } from "./reporters/base.reporter";
 import { JSONReporter } from "./reporters/json.reporter";
 import { HTMLReporter } from "./reporters/html.reporter";
 import { ConsoleReporter } from "./reporters/console.reporter";
+import { config } from "./config";
 
 export interface EvaluationExecutionReportItem {
   metricName: string;
@@ -17,11 +18,6 @@ export interface EvaluationExecutionReport {
   duration: number;
 }
 
-export interface ReportServiceConfig {
-  reporters?: BaseReporter[];
-  outputDir?: string;
-}
-
 export class ReportService {
   private static instance: ReportService | undefined;
   private results: EvaluationExecutionReportItem[] = [];
@@ -29,20 +25,24 @@ export class ReportService {
   private endTime = 0;
   private reporters: BaseReporter[];
 
-  private constructor(config: ReportServiceConfig = {}) {
-    const { reporters = [], outputDir = "./eval-reports" } = config;
+  private constructor() {
+    const { outputFormats = [], outputDir = './eval-reports' } = config.getReportingConfig();
     
-    // Default reporters if none provided
-    this.reporters = reporters.length > 0 ? reporters : [
-      new JSONReporter({ outputDir }),
-      new HTMLReporter({ outputDir }),
-      new ConsoleReporter()
-    ];
+    // Console reporter is always included
+    this.reporters = [new ConsoleReporter()];
+    
+    // Add file reporters based on config
+    if (outputFormats.includes('json')) {
+      this.reporters.push(new JSONReporter({ outputDir }));
+    }
+    if (outputFormats.includes('html')) {
+      this.reporters.push(new HTMLReporter({ outputDir }));
+    }
   }
 
-  public static getInstance(config?: ReportServiceConfig): ReportService {
+  public static getInstance(): ReportService {
     if (!ReportService.instance) {
-      ReportService.instance = new ReportService(config);
+      ReportService.instance = new ReportService();
     }
     return ReportService.instance;
   }

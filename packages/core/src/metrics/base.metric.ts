@@ -27,7 +27,7 @@ export class BaseMetric<TParams> {
     evaluationParams: TParams,
     threshold = 0.5,
   ) {
-    this.openai = config.createOpenAIClient();
+    this.openai = config.getOpenAIClient();
     this.name = name;
     this.criteria = criteria;
     this.evaluationParams = evaluationParams;

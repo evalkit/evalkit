@@ -9,6 +9,7 @@
   "include": [
     "src/**/*.ts",
     "scripts/**/*.ts",
+    "config-template/**/*.ts",
     "jest.config.ts",
     ".eslintrc.cjs"
   ],
