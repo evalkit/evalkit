@@ -3,6 +3,7 @@
 import type { SVGProps } from "react";
 import { Star, GitFork, Eye } from "lucide-react";
 import { motion } from "framer-motion";
+import { DemoSection } from "@/components/demo-section";
 
 export default function Home() {
   return (
@@ -121,6 +122,8 @@ export default function Home() {
         </div>
       </section>
 
+      <DemoSection />
+
       <section className="container py-8 md:py-12 lg:py-24 mx-auto">
         <motion.div
           initial={{ opacity: 0 }}
@@ -203,7 +206,6 @@ export default function Home() {
     </>
   );
 }
-
 const features = [
   {
     title: "Bias Detection",
@@ -279,3 +281,4 @@ const features = [
     },
   },
 ];
+

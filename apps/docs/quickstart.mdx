@@ -50,6 +50,51 @@ The configuration is environment-agnostic - use any environment variables or con
 - `baseURL`
 - `deploymentName` (for Azure OpenAI)
 
+### Configuration File
+
+You can also configure EvalKit using an `evalkit.config.ts` (or `.js`) file in your project root:
+
+```typescript
+// evalkit.config.ts
+import type { EvalKitConfig } from '@evalkit/core';
+
+const config: EvalKitConfig = {
+  openai: {
+    // Your OpenAI API key (defaults to OPENAI_API_KEY env var)
+    apiKey: process.env.OPENAI_API_KEY,
+    
+    // Optional: For Azure OpenAI
+    // baseURL: 'https://your-resource.openai.azure.com',
+    // apiVersion: '2023-05-15',
+    // deploymentName: 'your-deployment',
+  },
+  
+  reporting: {
+    // Which report formats to generate ('json' and/or 'html')
+    // Leave empty for console-only output
+    outputFormats: ['json', 'html'],
+    
+    // Where to save the report files
+    outputDir: './eval-reports'
+  }
+};
+
+export default config;
+```
+
+The config file supports:
+
+#### OpenAI Settings
+Same as the programmatic configuration above.
+
+#### Reporting Settings
+- `outputFormats`: Array of report formats to generate
+  - `[]`: Console output only (default)
+  - `['json']`: JSON reports
+  - `['html']`: HTML reports
+  - `['json', 'html']`: Both formats
+- `outputDir`: Directory where reports will be saved (default: './eval-reports')
+
 ## Writing your first evaluation
 
 The EvalKit evaluations framework provides a simple API to evaluate text using pre-trained transformer models. Here's a quick example to get you started:
