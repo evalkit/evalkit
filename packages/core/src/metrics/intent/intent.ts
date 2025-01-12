@@ -23,15 +23,15 @@ export async function classifyIntent(
         content: `
             Given the user question to follow, classify the intent behind the text and evaluate against the expected intent(s).
             Expected intent(s): ${expectedIntents.join(",")}
-            Return JSON response with schema: {
+            Return JSON response with schema: Array<{
 	            intent: string;
 	            confidence: float between 1-0 that indicates the confidence of the detected intent;
 	            similarity: {
 	              inputIntent: string;
 	              score: float between 1-0 that indicates the similarity between the detected intent and one of the expected intent(s)
 	            }
-            }[]
-            Always return an array. Even if empty
+            }>
+            RETURN AN ARRAY FOR THE LIST
           `,
       },
       { role: "user", content: input },
