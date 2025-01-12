@@ -6,8 +6,6 @@ export interface CoherenceMetricParams {
 }
 
 export class CoherenceMetric extends BaseMetric<CoherenceMetricParams> {
-  override evaluationParams: CoherenceMetricParams;
-
   constructor(evaluationParams: CoherenceMetricParams) {
     super(
       "Coherence Evaluation",

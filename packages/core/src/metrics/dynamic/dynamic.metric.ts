@@ -9,14 +9,12 @@ export interface DynamicMetricParams {
 }
 
 export class DynamicMetric extends BaseMetric<DynamicMetricParams> {
-  override evaluationParams: DynamicMetricParams;
-
   constructor(evaluationParams: DynamicMetricParams) {
     super("Dynamic Metric", "Dynamic Evaluation", evaluationParams);
   }
 
   // @ts-ignore
-  override async evaluateSteps(): Promise<EvaluationStepsResult> {
+  async evaluateSteps(): Promise<Omit<EvaluationStepsResult, 'reasons'> & { reasons: string[] }> {
     const results = await evaluateDynamic.call(
       this,
       this.evaluationParams.input,

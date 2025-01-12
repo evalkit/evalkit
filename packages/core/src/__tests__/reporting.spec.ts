@@ -63,7 +63,7 @@ describe("Reporting Integration", () => {
   });
 
   it("should generate reports for multiple metrics", async () => {
-    const reportService = ReportService.getInstance({ outputDir: TEST_OUTPUT_DIR });
+    const reportService = ReportService.getInstance();
     
     // Start evaluation
     reportService.reportEvaluationStart();
@@ -89,14 +89,12 @@ describe("Reporting Integration", () => {
     expect(mockedFs.mkdir).toHaveBeenCalledWith(TEST_OUTPUT_DIR, { recursive: true });
     
     const writeFileCalls = mockedFs.writeFile.mock.calls;
-    console.log('Write file calls:', writeFileCalls);
     expect(writeFileCalls.length).toBe(2); // JSON and HTML reports
 
     // Verify JSON report
     const jsonCall = writeFileCalls.find(call => typeof call[0] === 'string' && call[0].endsWith(".json"));
     expect(jsonCall).toBeDefined();
     const jsonReport = JSON.parse(jsonCall![1] as string);
-    console.log('JSON report:', jsonReport);
 
     expect(jsonReport.summary.totalEvaluations).toBe(3);
     expect(jsonReport.summary.passedEvaluations).toBe(2);

@@ -16,5 +16,6 @@ export abstract class BaseReporter {
     };
   }
 
+  // eslint-disable-next-line no-unused-vars
   abstract write(report: EvaluationExecutionReport): Promise<void>;
 } 

@@ -7,8 +7,6 @@ export interface SemanticSimilarityMetricParams {
 }
 
 export class SemanticSimilarityMetric extends BaseMetric<SemanticSimilarityMetricParams> {
-  override evaluationParams: SemanticSimilarityMetricParams;
-
   constructor(evaluationParams: SemanticSimilarityMetricParams) {
     super(
       "Semantic Similarity Evaluation",

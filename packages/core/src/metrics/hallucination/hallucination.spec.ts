@@ -22,7 +22,7 @@ describe('evaluateHallucination', () => {
 
 	describe('hallucination free statement', () => {
 		it('should return a score lower than threshold', async () => {
-			const output = 'Investing in renewable energy can lead to long-term economic benefits.';
+			const output = 'Solar and wind power are forms of renewable energy.';
 			const score = await invoker(output);
 			expect(score).toBeLessThan(0.5);
 		})

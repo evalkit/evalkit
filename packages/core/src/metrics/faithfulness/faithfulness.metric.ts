@@ -7,8 +7,6 @@ export interface FaithfulnessMetricParams {
 }
 
 export class FaithfulnessMetric extends BaseMetric<FaithfulnessMetricParams> {
-  override evaluationParams: FaithfulnessMetricParams;
-
   constructor(evaluationParams: FaithfulnessMetricParams) {
     super(
       "Faithfulness Evaluation",

@@ -5,7 +5,6 @@ import { OpenAI } from 'openai';
 
 describe('classifyIntent', () => {
 	let invoker: any;
-	const context = 'Renewable energy includes sources like solar and wind power.'
 
 	beforeAll(() => {
 		invoker = (input: string, expectedIntents: string[]) => {

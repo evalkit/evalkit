@@ -31,6 +31,7 @@ export async function classifyIntent(
 	              score: float between 1-0 that indicates the similarity between the detected intent and one of the expected intent(s)
 	            }
             }[]
+            Always return an array. Even if empty
           `,
       },
       { role: "user", content: input },
