@@ -1,7 +1,7 @@
 'use client';
 
 import { EvaluationExecutionReport } from '@evalkit/core';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { examples } from '@/lib/examples';
@@ -21,6 +21,10 @@ interface MetricGroup {
 }
 
 function ConsoleView({ result }: { result: EvaluationExecutionReport }) {
+  if (!result?.items) {
+    return null;
+  }
+
   const totalEvals = result.items.length;
   const passedEvals = result.items.filter(item => item.result.passed).length;
   const failedEvals = totalEvals - passedEvals;
@@ -86,10 +90,23 @@ export function DemoSection() {
   const [result, setResult] = useState<EvaluationResult | null>(null);
   const [loading, setLoading] = useState(false);
   const [selectedFormat, setSelectedFormat] = useState<ResultFormat>('console');
-  const { code, ...visibleResult } = (result ?? {})
+  const [cooldown, setCooldown] = useState(0);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (cooldown > 0) {
+      const timer = setInterval(() => {
+        setCooldown(prev => Math.max(0, prev - 1));
+      }, 1000);
+      return () => clearInterval(timer);
+    }
+  }, [cooldown]);
 
   const runExample = async () => {
+    if (cooldown > 0) return;
+    
     setLoading(true);
+    setError(null);
     try {
       const example = examples[selectedExample];
       const response = await fetch('/api/evaluate', {
@@ -100,6 +117,12 @@ export function DemoSection() {
         body: JSON.stringify({ exampleId: example.id }),
       });
       
+      if (response.status === 429) {
+        const { remainingSeconds } = await response.json();
+        setCooldown(remainingSeconds);
+        return;
+      }
+      
       if (!response.ok) {
         throw new Error('Evaluation failed');
       }
@@ -108,6 +131,7 @@ export function DemoSection() {
       setResult(evalResult);
     } catch (error) {
       console.error('Evaluation failed:', error);
+      setError(error instanceof Error ? error.message : 'Evaluation failed');
     } finally {
       setLoading(false);
     }
@@ -153,17 +177,28 @@ export function DemoSection() {
                 </pre>
               </div>
 
-              <div className="flex justify-center">
+              <div className="flex flex-col items-center gap-2">
                 <button
                   className="inline-flex h-12 items-center justify-center rounded-lg bg-primary px-8 text-sm font-medium text-primary-foreground transition-all hover:bg-primary/90 hover:scale-105 disabled:opacity-50 disabled:hover:scale-100"
                   onClick={runExample}
-                  disabled={loading}
+                  disabled={loading || cooldown > 0}
                 >
-                  {loading ? 'Running evaluation...' : 'Run evaluation'}
+                  {loading ? 'Running evaluation...' : 
+                   cooldown > 0 ? `Wait ${cooldown}s` : 'Run evaluation'}
                 </button>
+                {cooldown > 0 && (
+                  <p className="text-sm text-muted-foreground">
+                    Rate limit exceeded. Please wait {cooldown} seconds before trying again.
+                  </p>
+                )}
+                {error && (
+                  <p className="text-sm text-red-500">
+                    {error}
+                  </p>
+                )}
               </div>
 
-              {visibleResult && (
+              {result && (
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -177,13 +212,13 @@ export function DemoSection() {
                     </TabsList>
                     <TabsContent value="console" className="mt-4">
                       <div className="bg-background/50 p-4 rounded-lg overflow-auto">
-                        <ConsoleView result={visibleResult as EvaluationExecutionReport} />
+                        <ConsoleView result={result} />
                       </div>
                     </TabsContent>
                     <TabsContent value="json" className="mt-4">
                       <div className="bg-background/50 p-4 rounded-lg font-mono text-sm overflow-auto">
                         <pre className="whitespace-pre-wrap">
-                          {JSON.stringify(visibleResult, null, 2)}
+                          {JSON.stringify(result, null, 2)}
                         </pre>
                       </div>
                     </TabsContent>
