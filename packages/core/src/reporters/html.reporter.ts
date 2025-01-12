@@ -244,8 +244,8 @@ export class HTMLReporter extends BaseReporter {
         <div class="metric-header">
           <h2 class="metric-title">${metricName}</h2>
           <div class="metric-stats">
-            <span class="metric-stat passed">✓ ${data.passed} passed</span>
-            <span class="metric-stat failed">✗ ${data.failed} failed</span>
+            <span class="metric-stat passed">&check; ${data.passed} passed</span>
+            <span class="metric-stat failed">&cross; ${data.failed} failed</span>
             <span class="metric-stat">Score: ${(data.totalScore / data.count).toFixed(2)}</span>
           </div>
         </div>

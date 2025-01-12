@@ -17,7 +17,8 @@
     "dev": "rollup -c -w",
     "test": "jest --coverage",
     "test:watch": "jest --watch",
-    "publish": "turbo run build lint && changeset version && changeset publish"
+    "publish": "turbo run build lint && changeset version && changeset publish",
+    "test-script": "npx tsx scripts/generate-sample-reports.ts"
   },
   "devDependencies": {
     "@evalkit/eslint-config": "*",
