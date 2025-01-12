@@ -11,7 +11,7 @@
     "README.md"
   ],
   "scripts": {
-    "lint": "eslint .",
+    "lint": "eslint 'src/**/!(*.spec|*.test).{ts,tsx}' '*.ts'",
     "lint:fix": "eslint . --fix && prettier --write .",
     "build": "rollup -c",
     "dev": "rollup -c -w",

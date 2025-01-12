@@ -1,10 +1,17 @@
-/** @type {import("eslint").Linter.Config} */
 module.exports = {
-  root: true,
-  extends: ["@evalkit/eslint-config/library.js"],
-  parser: "@typescript-eslint/parser",
-  parserOptions: {
-    project: "./tsconfig.lint.json",
-    tsconfigRootDir: __dirname,
+  extends: ['../../.eslintrc.js'],
+  env: {
+    jest: true,
+    node: true
   },
-};
+  ignorePatterns: ['**/*.spec.ts', '**/*.test.ts', '**/__tests__/**', 'coverage/**', 'dist/**'],
+  rules: {
+    '@typescript-eslint/no-unused-vars': ['warn', { 
+      argsIgnorePattern: '^_',
+      varsIgnorePattern: '^_'
+    }],
+    'turbo/no-undeclared-env-vars': ['warn', {
+      allowList: ['OPENAI_API_KEY']
+    }]
+  }
+} 

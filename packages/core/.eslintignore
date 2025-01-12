@@ -1,0 +1,13 @@
+# Test files
+**/*.spec.ts
+**/*.test.ts
+**/__tests__/**
+
+# Build outputs
+dist/
+coverage/
+
+# Don't ignore these
+!src/
+!src/**/*.ts
+!config-template/

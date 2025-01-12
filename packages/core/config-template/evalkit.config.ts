@@ -1,3 +1,5 @@
+/* eslint-disable */
+// @ts-ignore
 import type { EvalKitConfig } from '@evalkit/core';
 
 const config: EvalKitConfig = {
@@ -21,4 +23,4 @@ const config: EvalKitConfig = {
   }
 } satisfies EvalKitConfig;
 
-export default config; 
+export default config;

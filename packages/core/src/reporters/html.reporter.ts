@@ -69,7 +69,7 @@ export class HTMLReporter extends BaseReporter {
   }
 
   // eslint-disable-next-line no-unused-vars
-  private generateHTML(summary: ReturnType<typeof this.generateSummary>, report: EvaluationExecutionReport): string {
+  private generateHTML(summary: ReturnType<typeof this.generateSummary>, _report: EvaluationExecutionReport): string {
     const passRate = (summary.passedEvaluations / summary.totalEvaluations) * 100;
     const duration = (summary.duration / 1000).toFixed(2);
 

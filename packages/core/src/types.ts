@@ -28,15 +28,14 @@ export type Metric =
   | SemanticSimilarityMetric;
 
 // eslint-disable-next-line no-unused-vars
-export type ExtractParams<T> = T extends { new (...args: any[]): infer R }
+export type ExtractParams<T> = T extends { new (...args: unknown[]): infer R }
   ? R extends Metric
     ? R["evaluationParams"]
     : never
   : never;
 
 export type UnionToIntersection<U> =
-  // eslint-disable-next-line no-unused-vars
-  (U extends any ? (k: U) => void : never) extends (k: infer I) => void
+  (U extends unknown ? (k: U) => void : never) extends (k: infer I) => void
     ? I
     : never;
 

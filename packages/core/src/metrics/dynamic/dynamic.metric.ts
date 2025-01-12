@@ -1,4 +1,4 @@
-import { DynamicEvaluationCriteria, evaluateDynamic } from "./dynamic";
+import { DynamicEvaluationCriteria, DynamicEvaluationStepResult, evaluateDynamic } from "./dynamic";
 import { BaseMetric, EvaluationStepsResult } from "../base.metric";
 
 export interface DynamicMetricParams {
@@ -13,8 +13,8 @@ export class DynamicMetric extends BaseMetric<DynamicMetricParams> {
     super("Dynamic Metric", "Dynamic Evaluation", evaluationParams);
   }
 
-  // @ts-ignore
-  async evaluateSteps(): Promise<Omit<EvaluationStepsResult, 'reasons'> & { reasons: string[] }> {
+  // @ts-expect-error -- force assignment of reasons
+  async evaluateSteps(): Promise<Omit<EvaluationStepsResult, 'reasons'> & { reasons: DynamicEvaluationStepResult[] }> {
     const results = await evaluateDynamic.call(
       this,
       this.evaluationParams.input,

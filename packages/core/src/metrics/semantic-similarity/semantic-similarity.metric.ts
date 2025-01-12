@@ -24,6 +24,6 @@ export class SemanticSimilarityMetric extends BaseMetric<SemanticSimilarityMetri
     );
 
     const reasons = [`Semantic similarity score: ${similarity}`];
-    return { score: similarity.toFixed(2), reasons };
+    return { score: Math.round( similarity * 1e2 ) / 1e2, reasons };
   }
 }

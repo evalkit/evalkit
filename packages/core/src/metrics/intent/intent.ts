@@ -72,7 +72,7 @@ export async function classifyIntent(
     }
 
     const reasons = [
-      `Detected intents: ${intentsList.map((intentItem: any) => intentItem.intent).join(", ")}`,
+      `Detected intents: ${intentsList.map((intentItem: { intent: string }) => intentItem.intent).join(", ")}`,
       `Matching intents: ${matchingIntents} out of ${expectedIntents.length}`,
     ];
 
