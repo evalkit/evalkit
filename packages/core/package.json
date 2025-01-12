@@ -1,6 +1,6 @@
 {
   "name": "@evalkit/core",
-  "version": "0.0.1-alpha.1",
+  "version": "0.0.2",
   "private": false,
   "main": "dist/index.esm.js",
   "module": "dist/index.esm.js",
