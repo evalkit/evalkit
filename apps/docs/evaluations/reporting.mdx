@@ -1,0 +1,60 @@
+---
+title: Reporting
+---
+
+## Overview
+
+The Reporting system provides basic evaluation results in a readable format. For each evaluation run, it shows pass/fail status, scores, and any relevant error messages or reasons. Results are displayed both individually and as a summary, making it easier to track how your model performed across different metrics.
+
+## Features
+
+### Individual Test Results
+Each evaluation provides:
+- A pass/fail status
+- A numerical score (0-1)
+- Detailed reasons for the evaluation result
+
+### Cumulative Summaries
+The report includes:
+- Total number of evaluations
+- Number of passed and failed tests
+- Overall duration of evaluations
+- Average scores across metrics
+
+### Metric-specific Breakdowns
+For each metric type:
+- Individual scores and statuses
+- Detailed failure reasons when applicable
+- Performance trends across multiple evaluations
+
+## Example
+
+```typescript
+import { evaluate, RelevancyMetric, HallucinationMetric } from '@evalkit/core';
+
+const results = await evaluate({
+  input: "What is the weather like today?",
+  output: "The temperature is 72°F with partly cloudy skies.",
+  context: "Current conditions: 72°F, partly cloudy"
+}, [RelevancyMetric, HallucinationMetric]);
+
+// outputs
+📊 EvalKit Report Summary
+========================
+🕒 Duration: 0.81s
+📝 Total Evaluations: 2
+✅ Passed: 2
+❌ Failed: 0
+
+📈 Metrics Breakdown
+------------------
+Relevancy Evaluation:
+  Score: 0.90
+  Passed: 1 Failed: 0
+
+Hallucination Evaluation:
+  Score: 1.00
+  Passed: 1 Failed: 0
+```
+
+The report provides a clear overview of how well your model performed across different evaluation metrics, making it easy to identify areas that need improvement. 

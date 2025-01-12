@@ -1,7 +1,6 @@
-import {
-  ReportService,
-} from "../report.service";
+import { ReportService } from "../report.service";
 import { OpenAI } from "openai";
+import { config } from "../config";
 
 export interface EvaluationStepsResult {
   score: number;
@@ -19,7 +18,6 @@ export class BaseMetric<TParams> {
   criteria: string;
   evaluationParams: TParams;
   threshold: number;
-  strictMode: boolean;
   evaluationsReporter: ReportService;
   openai: OpenAI;
 
@@ -29,7 +27,7 @@ export class BaseMetric<TParams> {
     evaluationParams: TParams,
     threshold = 0.5,
   ) {
-    this.openai = new OpenAI();
+    this.openai = config.getOpenAIClient();
     this.name = name;
     this.criteria = criteria;
     this.evaluationParams = evaluationParams;

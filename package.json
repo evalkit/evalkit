@@ -2,13 +2,17 @@
   "name": "evalkit",
   "private": true,
   "scripts": {
-    "build": "turbo build",
+    "build": "turbo run build --filter=./packages/*",
+    "build:all": "turbo build",
     "dev": "turbo dev",
     "lint": "turbo lint",
     "test": "turbo test",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+    "clean": "turbo clean",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "prerelease": "./scripts/prerelease.sh"
   },
   "devDependencies": {
+    "@changesets/cli": "^2.27.11",
     "@evalkit/eslint-config": "*",
     "@evalkit/typescript-config": "*",
     "@jest/globals": "^29.7.0",

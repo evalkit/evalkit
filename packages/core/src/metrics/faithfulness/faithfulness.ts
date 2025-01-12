@@ -1,3 +1,9 @@
+import { OpenAI } from "openai";
+
+export interface FaithfulnessContext {
+  openai: OpenAI;
+}
+
 enum Label {
   Faithful = "faithful",
   Contradicting = "contradicting",
@@ -11,6 +17,7 @@ enum Label {
  * @returns A promise that resolves to a number indicating the faithfulness score.
  */
 export async function evaluateFaithfulness(
+  this: FaithfulnessContext,
   output: string,
   context: string,
 ): Promise<number> {
@@ -28,17 +35,29 @@ export async function evaluateFaithfulness(
           content: `
 						Given the context: "${context}". Assess whether the following user statement accurately reflects the context without introducing any inaccuracies or distortions. Consider both direct claims and implied meanings.
 						Return JSON response with schema: { label: ${Object.values(Label).join(",")}; score: float between 1-0 }
-					`,
+            `,
         },
         { role: "user", content: statement },
       ],
       max_tokens: 80,
-      model: "gpt-3.5-turbo",
+      model: "gpt-4o-mini",
     });
 
-    const result = JSON.parse(response.choices[0].message.content);
-    if (result.label === Label.Faithful && result.score >= 0.8) {
-      truthfulStatements++;
+    if (!response.choices[0]?.message?.content) {
+      return 0;
+    }
+
+    try {
+      const result = JSON.parse(response.choices[0].message.content);
+      if (!result || typeof result.label !== 'string' || typeof result.score !== 'number') {
+        return 0;
+      }
+      
+      if (result.label === Label.Faithful && result.score >= 0.8) {
+        truthfulStatements++;
+      }
+    } catch (error) {
+      return 0;
     }
   }
 

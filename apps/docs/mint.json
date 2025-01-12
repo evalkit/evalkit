@@ -46,7 +46,8 @@
             "evaluations/metrics/relevancy",
             "evaluations/metrics/semantic-similarity"
           ]
-        }
+        },
+        "evaluations/reporting"
       ]
     }
   ],

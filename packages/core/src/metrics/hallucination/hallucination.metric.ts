@@ -7,8 +7,6 @@ export interface HallucinationMetricParams {
 }
 
 export class HallucinationMetric extends BaseMetric<HallucinationMetricParams> {
-  override evaluationParams: HallucinationMetricParams;
-
   constructor(evaluationParams: HallucinationMetricParams) {
     super(
       "Hallucination Evaluation",

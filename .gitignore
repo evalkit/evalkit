@@ -6,6 +6,7 @@ node_modules
 .pnp.js
 
 # Local env files
+packages/core/.env
 .env
 .env.local
 .env.development.local
@@ -40,3 +41,6 @@ yarn-error.log*
 # Misc
 .DS_Store
 *.pem
+
+# test eval reports
+packages/core/eval-reports

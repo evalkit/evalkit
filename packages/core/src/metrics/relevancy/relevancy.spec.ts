@@ -35,4 +35,24 @@ describe('evaluateRelevancy', () => {
 			expect(score).toBeLessThan(0.5);
 		})
 	})
+
+	it("should handle invalid OpenAI responses", async () => {
+		const mockOpenAI = {
+			chat: {
+				completions: {
+					create: jest.fn().mockResolvedValue({
+						choices: [{ message: { content: "invalid json" } }]
+					})
+				}
+			}
+		} as unknown as OpenAI;
+
+		const result = await evaluateRelevancy.call(
+			{ openai: mockOpenAI },
+			"Test question",
+			"Test answer"
+		);
+
+		expect(result).toBe(0);
+	});
 })

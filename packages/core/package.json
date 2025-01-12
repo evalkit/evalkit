@@ -1,6 +1,6 @@
 {
   "name": "@evalkit/core",
-  "version": "0.0.0",
+  "version": "0.0.1-alpha.1",
   "private": false,
   "main": "dist/index.esm.js",
   "module": "dist/index.esm.js",
@@ -17,11 +17,13 @@
     "dev": "rollup -c -w",
     "test": "jest --coverage",
     "test:watch": "jest --watch",
-    "publish": "turbo run build lint && changeset version && changeset publish"
+    "publish": "turbo run build lint && changeset version && changeset publish",
+    "test-script": "npx tsx scripts/generate-sample-reports.ts"
   },
   "devDependencies": {
     "@evalkit/eslint-config": "*",
     "@evalkit/typescript-config": "*",
+    "@jest/globals": "^29.7.0",
     "@turbo/gen": "^1.12.4",
     "@types/eslint": "^8.56.5",
     "@types/node": "^20.11.24",
@@ -29,6 +31,7 @@
     "typescript": "^5.3.3"
   },
   "dependencies": {
-    "openai": "^4.47.1"
+    "openai": "^4.47.1",
+    "chalk": "^5.3.0"
   }
 }

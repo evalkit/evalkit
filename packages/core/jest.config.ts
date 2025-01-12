@@ -9,5 +9,9 @@ const config: Config.InitialOptions = {
 	transform: {
 		'^.+\\.tsx?$': 'ts-jest',
 	},
+	coveragePathIgnorePatterns: [
+		'node_modules',
+		'config.ts'
+	]
 };
 export default config;

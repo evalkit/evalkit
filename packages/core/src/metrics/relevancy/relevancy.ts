@@ -1,3 +1,9 @@
+import { OpenAI } from "openai";
+
+export interface RelevancyContext {
+  openai: OpenAI;
+}
+
 /**
  * Evaluates the relevancy of the generated text in response to a given question.
  * Relevancy measures how well the answer addresses the question, focusing on contextual appropriateness.
@@ -7,6 +13,7 @@
  * @returns A promise that resolves to a boolean indicating whether the answer is relevant to the question.
  */
 export async function evaluateRelevancy(
+  this: RelevancyContext,
   input: string,
   output: string,
 ): Promise<number> {
@@ -22,10 +29,20 @@ export async function evaluateRelevancy(
       { role: "user", content: `Question: ${input}. Answer: ${output}` },
     ],
     max_tokens: 80,
-    model: "gpt-3.5-turbo",
+    model: "gpt-4o-mini",
   });
 
-  const { score } = JSON.parse(response.choices[0].message.content);
+  if (!response.choices[0]?.message?.content) {
+    return 0;
+  }
 
-  return score;
+  try {
+    const result = JSON.parse(response.choices[0].message.content);
+    if (!result || typeof result.score !== 'number') {
+      return 0;
+    }
+    return result.score;
+  } catch (error) {
+    return 0;
+  }
 }

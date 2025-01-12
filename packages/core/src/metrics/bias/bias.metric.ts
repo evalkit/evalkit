@@ -13,8 +13,6 @@ export interface BiasDetectionMetricParams {
  * @returns A promise that resolves to an object containing the evaluation score and reasons.
  */
 export class BiasDetectionMetric extends BaseMetric<BiasDetectionMetricParams> {
-  override evaluationParams: BiasDetectionMetricParams;
-
   constructor(evaluationParams: BiasDetectionMetricParams) {
     super(
       "Bias Detection Evaluation",

@@ -1,8 +1,15 @@
+import { OpenAI } from "openai";
 import { EvaluationStepsResult } from "../base.metric";
+
+export interface DynamicContext {
+  openai: OpenAI;
+}
 
 export interface DynamicEvaluationCriteria {
   type: string;
 }
+
+export type DynamicEvaluationStepResult = Omit<EvaluationStepsResult, 'reasons'> & { criteria: string; reason: string; passed: boolean }
 
 /**
  * Evaluates the dynamic alignment of actual output with the expected output based on specified criteria.
@@ -15,11 +22,12 @@ export interface DynamicEvaluationCriteria {
  * @returns {Promise<{score: number, reasons: string[]}[]>} A promise that resolves to an array of objects containing a numerical score and an array of reasons supporting the score for each criterion.
  */
 export async function evaluateDynamic(
+  this: DynamicContext,
   input: string,
   actualOutput: string,
   expectedOutput: string,
   criteria: DynamicEvaluationCriteria[],
-): Promise<EvaluationStepsResult[]> {
+): Promise<DynamicEvaluationStepResult[]> {
   // Generate a detailed prompt for evaluation
   const prompt = `
 	    Evaluate the following input, actual response and expected response based on a given set of criteria.
@@ -31,7 +39,7 @@ export async function evaluateDynamic(
 	    }
     `;
 
-  const results = [];
+  const results: DynamicEvaluationStepResult[] = [];
   for (const criterion of criteria) {
     // Use OpenAI API to evaluate the prompt
     const response = await this.openai.chat.completions.create({
@@ -48,16 +56,44 @@ export async function evaluateDynamic(
         },
       ],
       max_tokens: 250,
-      model: "gpt-3.5-turbo",
+      model: "gpt-4o-mini",
     });
 
-    // Extract reasoning and score from the model's response
-    const result = JSON.parse(response.choices[0].message.content);
-    results.push({
-      ...result,
-      criteria: criterion.type,
-      passed: result.score >= 0.8,
-    });
+    if (!response.choices[0]?.message?.content) {
+      results.push({
+        criteria: criterion.type,
+        score: 0,
+        reason: "Failed to get valid response from OpenAI",
+        passed: false,
+      });
+      continue;
+    }
+
+    try {
+      const result = JSON.parse(response.choices[0].message.content);
+      if (!result || typeof result.score !== 'number' || typeof result.reason !== 'string') {
+        results.push({
+          criteria: criterion.type,
+          score: 0,
+          reason: "Invalid response format from OpenAI",
+          passed: false,
+        });
+        continue;
+      }
+
+      results.push({
+        ...result,
+        criteria: criterion.type,
+        passed: result.score >= 0.8,
+      });
+    } catch (error) {
+      results.push({
+        criteria: criterion.type,
+        score: 0,
+        reason: "Failed to parse OpenAI response",
+        passed: false,
+      });
+    }
   }
 
   return results;
