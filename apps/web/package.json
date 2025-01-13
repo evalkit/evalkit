@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@evalkit/core": "^0.0.2",
     "@heroicons/react": "^2.2.0",
     "@radix-ui/react-tabs": "^1.1.2",
     "clsx": "^2.1.1",
