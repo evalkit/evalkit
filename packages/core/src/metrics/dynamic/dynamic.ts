@@ -70,12 +70,13 @@ export async function evaluateDynamic(
     }
 
     try {
-      const result = JSON.parse(response.choices[0].message.content);
+      const rawContent = response.choices[0].message.content;
+      const result = JSON.parse(rawContent);
       if (!result || typeof result.score !== 'number' || typeof result.reason !== 'string') {
         results.push({
           criteria: criterion.type,
           score: 0,
-          reason: "Invalid response format from OpenAI",
+          reason: `Invalid response format from OpenAI. Expected {score: number, reason: string}, but received: ${rawContent}`,
           passed: false,
         });
         continue;
@@ -87,10 +88,12 @@ export async function evaluateDynamic(
         passed: result.score >= 0.8,
       });
     } catch (error) {
+      const rawContent = response.choices[0]?.message?.content || 'No content';
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       results.push({
         criteria: criterion.type,
         score: 0,
-        reason: "Failed to parse OpenAI response",
+        reason: `Failed to parse OpenAI response: ${errorMessage}. Raw response: ${rawContent}`,
         passed: false,
       });
     }
