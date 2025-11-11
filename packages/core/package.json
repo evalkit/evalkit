@@ -4,7 +4,7 @@
   "private": false,
   "main": "dist/index.esm.js",
   "module": "dist/index.esm.js",
-  "types": "dist/index.d.ts",
+  "types": "dist/src/index.d.ts",
   "type": "module",
   "files": [
     "dist",
