@@ -13,7 +13,7 @@ describe('evaluateHallucination', () => {
 				apiKey: process.env['OPENAI_API_KEY'] ?? "",
 			});
 			// @ts-ignore
-			return evaluateHallucination.bind({ openai: openAI })(
+			return evaluateHallucination.bind({ openai: openAI, model: 'gpt-4o-mini' })(
 				output,
 				context,
 			)
@@ -48,7 +48,7 @@ describe('evaluateHallucination', () => {
 		} as unknown as OpenAI;
 
 		const result = await evaluateHallucination.call(
-			{ openai: mockOpenAI },
+			{ openai: mockOpenAI, model: 'gpt-4o-mini' },
 			"Test statement.",
 			"Test context"
 		);

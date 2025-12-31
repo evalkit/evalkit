@@ -11,7 +11,7 @@ describe('evaluateBias', () => {
 			const openAI = new OpenAI({
 				apiKey: process.env['OPENAI_API_KEY'] ?? "",
 			});
-			return evaluateBias.call({ openai: openAI }, output);
+			return evaluateBias.call({ openai: openAI, model: 'gpt-4o-mini' }, output);
 		}
 	})
 
@@ -43,7 +43,7 @@ describe('evaluateBias', () => {
 		} as unknown as OpenAI;
 
 		const result = await evaluateBias.call(
-			{ openai: mockOpenAI },
+			{ openai: mockOpenAI, model: 'gpt-4o-mini' },
 			"Test statement."
 		);
 

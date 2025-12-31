@@ -13,7 +13,7 @@ describe('evaluateFaithfulness', () => {
 				apiKey: process.env['OPENAI_API_KEY'] ?? "",
 			});
 			// @ts-ignore
-			return evaluateFaithfulness.bind({ openai: openAI })(
+			return evaluateFaithfulness.bind({ openai: openAI, model: 'gpt-4o-mini' })(
 				output,
 				context,
 			)
@@ -48,7 +48,7 @@ describe('evaluateFaithfulness', () => {
 		} as unknown as OpenAI;
 
 		const result = await evaluateFaithfulness.call(
-			{ openai: mockOpenAI },
+			{ openai: mockOpenAI, model: 'gpt-4o-mini' },
 			"Test statement.",
 			"Test context"
 		);

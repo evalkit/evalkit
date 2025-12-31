@@ -12,7 +12,7 @@ describe('classifyIntent', () => {
 				apiKey: process.env['OPENAI_API_KEY'] ?? "",
 			});
 			// @ts-ignore
-			return classifyIntent.bind({ openai: openAI })(
+			return classifyIntent.bind({ openai: openAI, model: 'gpt-4o-mini' })(
 				input,
 				expectedIntents,
 			)
@@ -43,7 +43,7 @@ describe('classifyIntent', () => {
 		} as unknown as OpenAI;
 
 		const result = await classifyIntent.call(
-			{ openai: mockOpenAI },
+			{ openai: mockOpenAI, model: 'gpt-4o-mini' },
 			"Test input",
 			["test intent"]
 		);

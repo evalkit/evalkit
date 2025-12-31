@@ -20,6 +20,8 @@ export class BaseMetric<TParams> {
   threshold: number;
   evaluationsReporter: ReportService;
   openai: OpenAI;
+  model: string;
+  embeddingModel: string;
 
   constructor(
     name: string,
@@ -28,6 +30,8 @@ export class BaseMetric<TParams> {
     threshold = 0.5,
   ) {
     this.openai = config.getOpenAIClient();
+    this.model = config.getModel();
+    this.embeddingModel = config.getEmbeddingModel();
     this.name = name;
     this.criteria = criteria;
     this.evaluationParams = evaluationParams;

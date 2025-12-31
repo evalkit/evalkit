@@ -1,8 +1,10 @@
 import { OpenAI } from "openai";
+import { parseJSONResponse } from "../../utils/helpers";
 import { EvaluationStepsResult } from "../base.metric";
 
 export interface DynamicContext {
   openai: OpenAI;
+  model: string;
 }
 
 export interface DynamicEvaluationCriteria {
@@ -56,7 +58,7 @@ export async function evaluateDynamic(
         },
       ],
       max_tokens: 250,
-      model: "gpt-4o-mini",
+      model: this.model,
     });
 
     if (!response.choices[0]?.message?.content) {
@@ -69,31 +71,22 @@ export async function evaluateDynamic(
       continue;
     }
 
-    try {
-      const result = JSON.parse(response.choices[0].message.content);
-      if (!result || typeof result.score !== 'number' || typeof result.reason !== 'string') {
-        results.push({
-          criteria: criterion.type,
-          score: 0,
-          reason: "Invalid response format from OpenAI",
-          passed: false,
-        });
-        continue;
-      }
-
-      results.push({
-        ...result,
-        criteria: criterion.type,
-        passed: result.score >= 0.8,
-      });
-    } catch (error) {
+    const result = parseJSONResponse<{ score: number; reason: string }>(response.choices[0].message.content);
+    if (!result || typeof result.score !== 'number' || typeof result.reason !== 'string') {
       results.push({
         criteria: criterion.type,
         score: 0,
-        reason: "Failed to parse OpenAI response",
+        reason: "Invalid response format from LLM",
         passed: false,
       });
+      continue;
     }
+
+    results.push({
+      ...result,
+      criteria: criterion.type,
+      passed: result.score >= 0.8,
+    });
   }
 
   return results;

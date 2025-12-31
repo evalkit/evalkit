@@ -13,7 +13,7 @@ describe('evaluateRelevancy', () => {
 				apiKey: process.env['OPENAI_API_KEY'] ?? "",
 			});
 			// @ts-ignore
-			return evaluateRelevancy.bind({ openai: openAI })(
+			return evaluateRelevancy.bind({ openai: openAI, model: 'gpt-4o-mini' })(
 				input,
 				output,
 			)
@@ -48,7 +48,7 @@ describe('evaluateRelevancy', () => {
 		} as unknown as OpenAI;
 
 		const result = await evaluateRelevancy.call(
-			{ openai: mockOpenAI },
+			{ openai: mockOpenAI, model: 'gpt-4o-mini' },
 			"Test question",
 			"Test answer"
 		);

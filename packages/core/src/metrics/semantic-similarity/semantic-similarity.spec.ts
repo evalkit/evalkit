@@ -12,7 +12,7 @@ describe('evaluateSemanticSimilarity', () => {
 				apiKey: process.env['OPENAI_API_KEY'] ?? "",
 			});
 			// @ts-ignore
-			return evaluateSemanticSimilarity.bind({ openai: openAI })(
+			return evaluateSemanticSimilarity.bind({ openai: openAI, embeddingModel: 'text-embedding-ada-002' })(
 				text1,
 				text2,
 			)
@@ -35,7 +35,7 @@ describe('evaluateSemanticSimilarity', () => {
 		} as unknown as OpenAI;
 
 		const result = await evaluateSemanticSimilarity.call(
-			{ openai: mockOpenAI },
+			{ openai: mockOpenAI, embeddingModel: 'text-embedding-ada-002' },
 			"Test text 1",
 			"Test text 2"
 		);

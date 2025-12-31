@@ -1,7 +1,9 @@
 import { OpenAI } from "openai";
+import { parseJSONResponse } from "../../utils/helpers";
 
 export interface CoherenceContext {
   openai: OpenAI;
+  model: string;
 }
 
 enum Label {
@@ -46,7 +48,7 @@ export async function evaluateCoherence(
         },
       ],
       max_tokens: 80,
-      model: "gpt-4o-mini",
+      model: this.model,
     });
 
     if (!response.choices[0]?.message?.content) {
@@ -56,30 +58,23 @@ export async function evaluateCoherence(
       };
     }
 
-    try {
-      const result = JSON.parse(response.choices[0].message.content);
-      if (!result || typeof result.label !== 'string' || typeof result.score !== 'number' || typeof result.reason !== 'string') {
-        return {
-          score: 0,
-          reason: "Invalid response format from OpenAI",
-        };
-      }
-
-      if (result.label === Label.Incoherent && result.score >= 0.8) {
-        return {
-          score: 0,
-          reason: result.reason,
-        };
-      }
-
-      if (result.label === Label.Coherent && result.score >= 0.8) {
-        coherentStatements++;
-      }
-    } catch (error) {
+    const result = parseJSONResponse<{ label: string; score: number; reason: string }>(response.choices[0].message.content);
+    if (!result || typeof result.label !== 'string' || typeof result.score !== 'number' || typeof result.reason !== 'string') {
       return {
         score: 0,
-        reason: "Failed to parse OpenAI response",
+        reason: "Invalid response format from LLM",
       };
+    }
+
+    if (result.label === Label.Incoherent && result.score >= 0.8) {
+      return {
+        score: 0,
+        reason: result.reason,
+      };
+    }
+
+    if (result.label === Label.Coherent && result.score >= 0.8) {
+      coherentStatements++;
     }
   }
 

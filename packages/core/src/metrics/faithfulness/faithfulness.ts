@@ -1,7 +1,9 @@
 import { OpenAI } from "openai";
+import { parseJSONResponse } from "../../utils/helpers";
 
 export interface FaithfulnessContext {
   openai: OpenAI;
+  model: string;
 }
 
 enum Label {
@@ -40,24 +42,20 @@ export async function evaluateFaithfulness(
         { role: "user", content: statement },
       ],
       max_tokens: 80,
-      model: "gpt-4o-mini",
+      model: this.model,
     });
 
     if (!response.choices[0]?.message?.content) {
       return 0;
     }
 
-    try {
-      const result = JSON.parse(response.choices[0].message.content);
-      if (!result || typeof result.label !== 'string' || typeof result.score !== 'number') {
-        return 0;
-      }
-      
-      if (result.label === Label.Faithful && result.score >= 0.8) {
-        truthfulStatements++;
-      }
-    } catch (error) {
+    const result = parseJSONResponse<{ label: string; score: number }>(response.choices[0].message.content);
+    if (!result || typeof result.label !== 'string' || typeof result.score !== 'number') {
       return 0;
+    }
+
+    if (result.label === Label.Faithful && result.score >= 0.8) {
+      truthfulStatements++;
     }
   }
 

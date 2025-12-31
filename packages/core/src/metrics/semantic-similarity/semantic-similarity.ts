@@ -3,6 +3,7 @@ import { calculateCosineSimilarity } from "../../utils/helpers";
 
 export interface SemanticSimilarityContext {
   openai: OpenAI;
+  embeddingModel: string;
 }
 
 /**
@@ -20,7 +21,7 @@ export async function evaluateSemanticSimilarity(
   try {
     const { data } = await this.openai.embeddings.create({
       input: [text1, text2],
-      model: "text-embedding-ada-002",
+      model: this.embeddingModel,
     });
 
     if (!data?.[0]?.embedding || !data?.[1]?.embedding) {

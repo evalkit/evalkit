@@ -16,7 +16,7 @@ describe("evaluateDynamic", () => {
     } as unknown as OpenAI;
 
     const result = await evaluateDynamic.call(
-      { openai: mockOpenAI },
+      { openai: mockOpenAI, model: 'gpt-4o-mini' },
       "Test input",
       "Test actual",
       "Test expected",

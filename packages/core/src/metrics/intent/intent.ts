@@ -1,7 +1,9 @@
 import { OpenAI } from "openai";
+import { parseJSONResponse } from "../../utils/helpers";
 
 export interface IntentContext {
   openai: OpenAI;
+  model: string;
 }
 
 /**
@@ -37,7 +39,7 @@ export async function classifyIntent(
       { role: "user", content: input },
     ],
     max_tokens: 250,
-    model: "gpt-4o-mini",
+    model: this.model,
   });
 
   if (!response.choices[0]?.message?.content) {
@@ -47,43 +49,42 @@ export async function classifyIntent(
     };
   }
 
-  try {
-    const intentsList = JSON.parse(response.choices[0].message.content);
-    if (!Array.isArray(intentsList)) {
-      return {
-        score: 0,
-        reasons: ["Invalid response format from OpenAI"],
-      };
-    }
+  interface IntentItem {
+    intent: string;
+    confidence: number;
+    similarity: { inputIntent: string; score: number };
+  }
 
-    let matchingIntents = 0;
-    for (const intentItem of intentsList) {
-      if (!intentItem?.confidence || !intentItem?.similarity?.inputIntent || !intentItem?.similarity?.score) {
-        continue;
-      }
-      const { confidence, similarity } = intentItem;
-      if (
-        confidence > 0.8 &&
-        expectedIntents.includes(similarity.inputIntent) &&
-        similarity.score >= 0.8
-      ) {
-        matchingIntents++;
-      }
-    }
-
-    const reasons = [
-      `Detected intents: ${intentsList.map((intentItem: { intent: string }) => intentItem.intent).join(", ")}`,
-      `Matching intents: ${matchingIntents} out of ${expectedIntents.length}`,
-    ];
-
-    return {
-      score: matchingIntents / expectedIntents.length,
-      reasons,
-    };
-  } catch (error) {
+  const intentsList = parseJSONResponse<IntentItem[]>(response.choices[0].message.content);
+  if (!intentsList || !Array.isArray(intentsList)) {
     return {
       score: 0,
-      reasons: ["Failed to parse OpenAI response"],
+      reasons: ["Invalid response format from LLM"],
     };
   }
+
+  let matchingIntents = 0;
+  for (const intentItem of intentsList) {
+    if (!intentItem?.confidence || !intentItem?.similarity?.inputIntent || !intentItem?.similarity?.score) {
+      continue;
+    }
+    const { confidence, similarity } = intentItem;
+    if (
+      confidence > 0.8 &&
+      expectedIntents.includes(similarity.inputIntent) &&
+      similarity.score >= 0.8
+    ) {
+      matchingIntents++;
+    }
+  }
+
+  const reasons = [
+    `Detected intents: ${intentsList.map((intentItem) => intentItem.intent).join(", ")}`,
+    `Matching intents: ${matchingIntents} out of ${expectedIntents.length}`,
+  ];
+
+  return {
+    score: matchingIntents / expectedIntents.length,
+    reasons,
+  };
 }

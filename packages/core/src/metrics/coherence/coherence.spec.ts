@@ -10,7 +10,7 @@ describe('evaluateCoherence', () => {
 			const openAI = new OpenAI({
 				apiKey: process.env['OPENAI_API_KEY'] ?? "",
 			});
-			return evaluateCoherence.call({ openai: openAI }, output);
+			return evaluateCoherence.call({ openai: openAI, model: 'gpt-4o-mini' }, output);
 		}
 	})
 	describe('coherent statement', () => {
@@ -41,7 +41,7 @@ describe('evaluateCoherence', () => {
 		} as unknown as OpenAI;
 
 		const result = await evaluateCoherence.call(
-			{ openai: mockOpenAI },
+			{ openai: mockOpenAI, model: 'gpt-4o-mini' },
 			"First statement. Second statement."
 		);
 

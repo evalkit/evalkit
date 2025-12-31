@@ -1,7 +1,9 @@
 import { OpenAI } from "openai";
+import { parseJSONResponse } from "../../utils/helpers";
 
 export interface RelevancyContext {
   openai: OpenAI;
+  model: string;
 }
 
 /**
@@ -29,20 +31,16 @@ export async function evaluateRelevancy(
       { role: "user", content: `Question: ${input}. Answer: ${output}` },
     ],
     max_tokens: 80,
-    model: "gpt-4o-mini",
+    model: this.model,
   });
 
   if (!response.choices[0]?.message?.content) {
     return 0;
   }
 
-  try {
-    const result = JSON.parse(response.choices[0].message.content);
-    if (!result || typeof result.score !== 'number') {
-      return 0;
-    }
-    return result.score;
-  } catch (error) {
+  const result = parseJSONResponse<{ score: number }>(response.choices[0].message.content);
+  if (!result || typeof result.score !== 'number') {
     return 0;
   }
+  return result.score;
 }
