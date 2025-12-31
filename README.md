@@ -14,8 +14,8 @@ EvalKit
 <a href="https://opensource.org/licenses/Apache-2.0">
   <img src="https://img.shields.io/badge/License-Apache%202.0-blue.svg" alt="License">
 </a>
-<a href="https://www.npmjs.com/package/evalkit-ollama" target="_blank">
-  <img src="https://img.shields.io/badge/npm-evalkit--ollama-green">
+<a href="https://www.npmjs.com/package/@evalkit/core" target="_blank">
+  <img src="https://img.shields.io/badge/npm-@evalkit/core-green">
 </a>
 </p>
 
@@ -117,7 +117,7 @@ Looking for a metric/feature that's not listed here? [Open an issue](https://git
 EvalKit currently exports a core package that includes all evaluation related functionalities. Install the package by running the following command:
 
 ```bash
-npm install --save-dev evalkit-ollama
+npm install --save-dev @evalkit/core
 ```
 
 ## Configuration
@@ -127,7 +127,7 @@ EvalKit supports multiple LLM providers through the `configure()` function. You 
 ### OpenAI
 
 ```typescript
-import { configure, evaluate, RelevancyMetric } from 'evalkit-ollama';
+import { configure, evaluate, RelevancyMetric } from '@evalkit/core';
 
 configure({
   apiKey: 'your-openai-api-key',
@@ -145,7 +145,7 @@ const result = await evaluate(
 EvalKit supports Ollama and other OpenAI-compatible providers:
 
 ```typescript
-import { configure, evaluate, RelevancyMetric } from 'evalkit-ollama';
+import { configure, evaluate, RelevancyMetric } from '@evalkit/core';
 
 configure({
   baseURL: 'http://localhost:11434/v1',
@@ -176,7 +176,3 @@ We welcome contributions from the community! Please feel free to submit pull req
 # License
 
 This repository's source code is available under the [Apache 2.0 License](LICENSE).
-
-# Acknowledgments
-
-This project is forked from [EvalKit](https://github.com/evalkit/evalkit) and is licensed under the Apache 2.0 License.

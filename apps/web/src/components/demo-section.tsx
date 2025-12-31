@@ -1,6 +1,6 @@
 'use client';
 
-import { EvaluationExecutionReport } from 'evalkit-ollama';
+import { EvaluationExecutionReport } from '@evalkit/core';
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
