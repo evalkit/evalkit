@@ -176,3 +176,7 @@ We welcome contributions from the community! Please feel free to submit pull req
 # License
 
 This repository's source code is available under the [Apache 2.0 License](LICENSE).
+
+# Acknowledgments
+
+This project is forked from [EvalKit](https://github.com/evalkit/evalkit) and is licensed under the Apache 2.0 License.
