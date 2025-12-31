@@ -1,4 +1,4 @@
-import { evaluate, BiasDetectionMetric, HallucinationMetric, RelevancyMetric } from "@evalkit/core";
+import { evaluate, BiasDetectionMetric, HallucinationMetric, RelevancyMetric } from "evalkit-ollama";
 import * as dotenv from "dotenv";
 
 // Load environment variables from .env

@@ -1,4 +1,4 @@
-import { evaluate } from '@evalkit/core';
+import { evaluate } from 'evalkit-ollama';
 import { NextResponse } from 'next/server';
 import { examples } from '@/lib/examples';
 

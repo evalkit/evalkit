@@ -1,4 +1,4 @@
-import { BiasDetectionMetric, HallucinationMetric, RelevancyMetric } from '@evalkit/core';
+import { BiasDetectionMetric, HallucinationMetric, RelevancyMetric } from 'evalkit-ollama';
 
 export interface Example {
   id: string;
