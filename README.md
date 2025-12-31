@@ -120,6 +120,55 @@ EvalKit currently exports a core package that includes all evaluation related fu
 npm install --save-dev @evalkit/core
 ```
 
+## Configuration
+
+EvalKit supports multiple LLM providers through the `configure()` function. You can configure your preferred provider before running evaluations.
+
+### OpenAI
+
+```typescript
+import { configure, evaluate, RelevancyMetric } from '@evalkit/core';
+
+configure({
+  apiKey: 'your-openai-api-key',
+  model: 'gpt-4o-mini',  // optional, defaults to 'gpt-4o-mini'
+});
+
+const result = await evaluate(
+  { input: 'What is the capital of France?', output: 'Paris is the capital of France.' },
+  [RelevancyMetric]
+);
+```
+
+### Ollama (Local LLM)
+
+EvalKit supports Ollama and other OpenAI-compatible providers:
+
+```typescript
+import { configure, evaluate, RelevancyMetric } from '@evalkit/core';
+
+configure({
+  baseURL: 'http://localhost:11434/v1',
+  apiKey: 'ollama',  // Ollama doesn't require a real key
+  model: 'llama3.2',
+  embeddingModel: 'nomic-embed-text',  // for SemanticSimilarityMetric
+});
+
+const result = await evaluate(
+  { input: 'What is the capital of France?', output: 'Paris is the capital of France.' },
+  [RelevancyMetric]
+);
+```
+
+### Configuration Options
+
+| Option | Description | Default |
+|--------|-------------|---------|
+| `apiKey` | API key for the LLM provider | - |
+| `baseURL` | Custom API endpoint URL | - |
+| `model` | Model name for chat completions | `gpt-4o-mini` |
+| `embeddingModel` | Model name for embeddings | `text-embedding-ada-002` |
+
 # Contributing
 
 We welcome contributions from the community! Please feel free to submit pull requests or create issues for bugs or feature suggestions.
